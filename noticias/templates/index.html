@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Objetiviza{% endblock %}
+
+{% block content %}
+
+		<!--welcome-hero start -->
+		<section id="home" class="welcome-hero background-index">
+			<div class="container">
+				<div class="welcome-hero-txt">
+					<h2>El portal de información <br> definitivo </h2>
+					<p>
+						Encuentra aquí toda la actualidad contrastada según la orientación política de los medios
+					</p>
+				</div>
+			</div>
+
+		</section><!--/.welcome-hero-->
+		<!--welcome-hero end -->
+
+		<!--list-topics start -->
+		<section id="list-topics" class="list-topics">
+			<div class="container">
+				<div class="list-topics-content">
+					<ul>
+						<li>
+							<div class="single-list-topics-content">
+								<div class="single-list-topics-icon">
+									<i class="flaticon-restaurant"></i>
+								</div>
+								<h2><a href="{% url 'articles' section='spain' %}">España</a></h2>
+								<p>{{ spain_count }} artículos</p>
+							</div>
+						</li>
+						<li>
+							<div class="single-list-topics-content">
+								<div class="single-list-topics-icon">
+									<i class="flaticon-travel"></i>
+								</div>
+								<h2><a href="{% url 'articles' section='international' %}">Internacional</a></h2>
+								<p>{{ international_count }} artículos</p>
+							</div>
+						</li>
+						<li>
+							<div class="single-list-topics-content">
+								<div class="single-list-topics-icon">
+									<i class="flaticon-building"></i>
+								</div>
+								<h2><a href="{% url 'articles' section='economy' %}">Economía</a></h2>
+								<p>{{ economy_count }} artículos</p>
+							</div>
+						</li>
+						<li>
+							<div class="single-list-topics-content">
+								<div class="single-list-topics-icon">
+									<i class="flaticon-pills"></i>
+								</div>
+								<h2><a href="{% url 'articles' section='science' %}">Ciencia</a></h2>
+								<p>{{ science_count }} artículos</p>
+							</div>
+						</li>
+						<li>
+							<div class="single-list-topics-content">
+								<div class="single-list-topics-icon">
+									<i class="flaticon-transport"></i>
+								</div>
+								<h2><a href="{% url 'articles' section='sport' %}">Deporte</a></h2>
+								<p>{{ sports_count }} artículos</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div><!--/.container-->
+
+		</section><!--/.list-topics-->
+		<!--list-topics end-->
+
+		<!--works start -->
+		<section id="works" class="works">
+			<div class="container">
+				<div class="section-header">
+					<h2>¿Cómo funciona?</h2>
+					<p></p>
+				</div><!--/.section-header-->
+				<div class="works-content">
+					<div class="row">
+						<div class="col-md-4 col-sm-6">
+							<div class="single-how-works">
+								<div class="single-how-works-icon">
+									<i class="flaticon-lightbulb-idea"></i>
+								</div>
+								<h2><a href="#">Escoge <span>una sección</span></a></h2>
+								<p>
+									Escoge la categoría que te interese en el menú y explora los temas cubiertos por los diferentes periódicos.
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4 col-sm-6">
+							<div class="single-how-works">
+								<div class="single-how-works-icon">
+									<i class="flaticon-networking"></i>
+								</div>
+								<h2><a href="#">Usa <span> los filtros</span></a></h2>
+								<p>
+									Selecciona las fechas en las que estás interesado o filtra por periódicos.
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4 col-sm-6">
+							<div class="single-how-works">
+								<div class="single-how-works-icon">
+									<i class="flaticon-location-on-road"></i>
+								</div>
+								<h2><a href="#">Compara <span> los titulares</span></a></h2>
+								<p>
+									Compara cómo tratan ciertos temas de manera distinta los medios de izquierda, derecha o centro.
+								</p>
+								<!--
+								<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
+									leer más
+								</button>
+								-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!--/.container-->
+		
+		</section><!--/.works-->
+		<!--works end -->
+
+		<!-- statistics strat -->
+		<section id="statistics"  class="statistics">
+			<div class="container">
+				<div class="statistics-counter"> 
+					<div class="col-md-3 col-sm-6">
+						<div class="single-ststistics-box">
+							<div class="statistics-content">
+								<div class="counter">{{ total_count }} </div> <span></span>
+							</div><!--/.statistics-content-->
+							<h3>articulos</h3>
+						</div><!--/.single-ststistics-box-->
+					</div><!--/.col-->
+					<div class="col-md-3 col-sm-6">
+						<div class="single-ststistics-box">
+							<div class="statistics-content">
+								<div class="counter">34</div> <span></span>
+							</div><!--/.statistics-content-->
+							<h3>periodicos</h3>
+						</div><!--/.single-ststistics-box-->
+					</div><!--/.col-->
+					<div class="col-md-3 col-sm-6">
+						<div class="single-ststistics-box">
+							<div class="statistics-content">
+								<div class="counter">569</div> <span></span>
+							</div><!--/.statistics-content-->
+							<h3>temas</h3>
+						</div><!--/.single-ststistics-box-->
+					</div><!--/.col-->
+					<div class="col-md-3 col-sm-6">
+						<div class="single-ststistics-box">
+							<div class="statistics-content">
+								<div class="counter">0</div> <span>k+</span>
+							</div><!--/.statistics-content-->
+							<h3>lectores</h3>
+						</div><!--/.single-ststistics-box-->
+					</div><!--/.col-->
+				</div><!--/.statistics-counter-->	
+			</div><!--/.container-->
+
+		</section><!--/.counter-->	
+		<!-- statistics end -->
+
+
+{% endblock %}

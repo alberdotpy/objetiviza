@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Estadísticas{% endblock %}
+
+{% block content %}
+
+    <div class="statistics-container">
+
+        <h2>Total de Periódicos: {{ total_periodicos }}</h2>
+
+    <hr>
+
+        <h2 class="section-title">Equilibrio Ideológico de Periódicos</h2>
+
+        <!-- Calcular el total de periódicos -->
+        {% with total_count=total_periodicos %}
+
+        <!-- Barra de equilibrio ideológico -->
+        <div class="progress mt-2" style="height: 20px;">
+            {% for alignment, percentage in periodicos_count_percentage.items %}
+                <div class="progress-bar
+                            {% if alignment == 'Izquierda' %}progress-left{% endif %}
+                            {% if alignment == 'Centro-Izquierda' %}progress-center-left{% endif %}
+                            {% if alignment == 'Centro' %}progress-center{% endif %}
+                            {% if alignment == 'Centro-Derecha' %}progress-center-right{% endif %}
+                            {% if alignment == 'Derecha' %}progress-right{% endif %}"
+                     role="progressbar"
+                     style="width: {{ percentage }}%;"
+                     aria-valuenow="{{ percentage }}"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    {{ percentage|floatformat:1 }}%
+                </div>
+            {% endfor %}
+        </div>
+        {% endwith %}
+
+    <hr>
+
+        <h2>Artículos por Periódico</h2>
+        <table class="periodico-table">
+            <thead>
+                <tr>
+                    <th>Favicon</th>
+                    <th>Nombre</th>
+                    <th>Director</th>
+                    <th>Alineación</th>
+                    <th>Lectores</th>
+                    <th>Presupuesto</th>
+                    <th>Región</th>
+                    <th>Artículos Totales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for periodico, info in periodicos_info.items %}
+                    <tr>
+                        <td><img src="{{ info.logo_url }}" alt="Logo de {{ periodico }}" class="publisher-logo"></td>
+                        <td><a href="{{ info.url }}" target="_blank">{{ periodico }}</a></td>
+                        <td>{{ info.director }}</td>
+                        <td>{{ info.alignment }}</td>
+                        <td>{{ info.readers }}</td>
+                        <td>{{ info.budget }}</td>
+                        <td>{{ info.region }}</td>
+                        <td>{{ info.articulos_count }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8">No hay artículos registrados.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+
+{% endblock %}

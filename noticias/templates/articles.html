@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ nombre_seccion }} - Objetiviza{% endblock %}
+
+{% block content %}
+<!--welcome-hero start -->
+    <section id="home" class="welcome-hero background-spain">
+    <div class="container">
+        <div class="welcome-hero-txt">
+            <h2>Noticias de <br> {{ nombre_seccion }} </h2>
+            <p>
+                Encuentra aquí toda la actualidad sobre {{ nombre_seccion }} contrastada según la orientación política de los medios
+            </p>
+        </div>
+        <div class="welcome-hero-txt">
+            <form method="get" class="w-100 mx-auto">
+                <div class="form-row">
+
+                    <div class="col-md-6">
+                        <label style="color: #fff">Selecciona Periódicos:</label>
+                        <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+                            <!-- Distribuir en dos columnas con CSS -->
+                            <div class="d-flex flex-wrap" style="column-count: 2; column-gap: 20px;">
+                                {% for publisher in all_publishers %}
+                                    <div class="form-check text-start" style="break-inside: avoid; text-align: left; color: #fff">
+                                        <input class="form-check-input" type="checkbox" name="publishers" id="{{ publisher.title }}" value="{{ publisher.title }}"
+                                        {% if publisher.title in selected_publishers %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ publisher.title }}">
+                                            {{ publisher.title }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label style="color: #fff" for="start_date">Fecha desde:</label>
+                            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #fff" for="end_date">Fecha hasta:</label>
+                            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+                        </div>
+                        <div class="form-group w-100 text-center">
+                            <button type="submit" class="btn btn-primary w-75 mb-2">Filtrar</button>
+                            <a href="{% url 'articles' section='spain' %}" class="btn btn-danger w-75">Reiniciar</a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+
+<hr>
+
+<div class="container">
+    <div class="row">
+        <!-- Contenido de artículos en la columna derecha -->
+        <div class="col-12">
+            {% for topic, data in grouped_articles.items %}
+            <div class="mb-4" id="{{ topic|slugify }}" style="border: 2px solid #E1E1E1; margin-bottom: 30px;">
+                <div class="card-header">
+                    <h5>
+                        <a class="collapsed" data-bs-toggle="collapse" href="#collapse{{ topic|slugify }}" role="button" aria-expanded="false" aria-controls="collapse{{ topic|slugify }}">
+                            Tema: {{ topic }}
+                        </a>
+                    </h5>
+                    <!-- Número de periódicos cubriendo el tema -->
+                    <small class="text-muted" style="text-align: right; display: block;">
+                        {{ data.publishers|length }} periódicos han cubierto este tema.
+                    </small>
+                    <!-- Barra de equilibrio ideológico -->
+                    <div class="progress mt-2" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ data.left_percentage }}%; background-color: #E74C3C;"
+                             aria-valuenow="{{ data.left_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ data.left_percentage|floatformat:1 }}%
+                        </div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ data.center_left_percentage }}%; background-color: #FF7F7F;"
+                             aria-valuenow="{{ data.center_left_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ data.center_left_percentage|floatformat:1 }}%
+                        </div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ data.center_percentage }}%; background-color: #BDC3C7;"
+                             aria-valuenow="{{ data.center_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ data.center_percentage|floatformat:1 }}%
+                        </div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ data.center_right_percentage }}%; background-color: #7FB3D5;"
+                             aria-valuenow="{{ data.center_right_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ data.center_right_percentage|floatformat:1 }}%
+                        </div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ data.right_percentage }}%; background-color: #3498DB;"
+                             aria-valuenow="{{ data.right_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ data.right_percentage|floatformat:1 }}%
+                        </div>
+                    </div>
+                </div>
+                <!-- Contenido del tema que se puede expandir o contraer -->
+                <div class="collapse" id="collapse{{ topic|slugify }}">
+                    <div class="row">
+                        <!-- Columna Izquierda -->
+                        <div class="col-md-4">
+                            <h6 class="text-center mt-3">Izquierda</h6>
+                            {% for article in data.articles %}
+                                {% if article.publisher.alignment == 'Izquierda' or article.publisher.alignment == 'Centro-Izquierda' %}
+                                <a href="{{ article.url }}" target="_blank" style="text-decoration: none; color: inherit;">
+                                    <div class="card mb-4" style="border: 2px solid #ccc; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ article.title }}</h5>
+                                            <p class="card-text">{{ article.description }}</p>
+
+                                            <!-- Imagen del artículo -->
+                                            {% if article.image_url %}
+                                            <img src="{{ article.image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ article.title }}">
+                                            {% endif %}
+
+                                            <p class="card-text">
+                                                <small style="font-size: 16px;">
+                                                    {% if article.publisher.logo_url %}
+                                                    <img src="{{ article.publisher.logo_url }}" alt=""
+                                                         style="width: 25px; height: 25px; vertical-align: middle; margin-right: 10px;">
+                                                    {% endif %}
+                                                    <strong>{{ article.publisher.title }}</strong> | {{ article.publisher.alignment }} |
+                                                    {{ article.published_date|date:"d M Y" }}
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endif %}
+                            {% empty %}
+                            <p class="text-center text-muted">No hay artículos</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Columna Centro -->
+                        <div class="col-md-4">
+                            <h6 class="text-center mt-3">Centro</h6>
+                            {% for article in data.articles %}
+                                {% if article.publisher.alignment == 'Centro' %}
+                                <a href="{{ article.url }}" target="_blank" style="text-decoration: none; color: inherit;">
+                                    <div class="card mb-4" style="border: 2px solid #ccc; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ article.title }}</h5>
+                                            <p class="card-text">{{ article.description }}</p>
+
+                                            <!-- Imagen del artículo -->
+                                            {% if article.image_url %}
+                                            <img src="{{ article.image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ article.title }}">
+                                            {% endif %}
+
+                                            <p class="card-text">
+                                                <small style="font-size: 16px;">
+                                                    {% if article.publisher.logo_url %}
+                                                    <img src="{{ article.publisher.logo_url }}" alt=""
+                                                         style="width: 25px; height: 25px; vertical-align: middle; margin-right: 10px;">
+                                                    {% endif %}
+                                                    <strong>{{ article.publisher.title }}</strong> | {{ article.publisher.alignment }} |
+                                                    {{ article.published_date|date:"d M Y" }}
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endif %}
+                            {% empty %}
+                            <p class="text-center text-muted">No hay artículos</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="col-md-4">
+                            <h6 class="text-center mt-3">Derecha</h6>
+                            {% for article in data.articles %}
+                                {% if article.publisher.alignment == 'Derecha' or article.publisher.alignment == 'Centro-Derecha' %}
+                                <a href="{{ article.url }}" target="_blank" style="text-decoration: none; color: inherit;">
+                                    <div class="card mb-4" style="border: 2px solid #ccc; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ article.title }}</h5>
+                                            <p class="card-text">{{ article.description }}</p>
+
+                                            <!-- Imagen del artículo -->
+                                            {% if article.image_url %}
+                                            <img src="{{ article.image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ article.title }}">
+                                            {% endif %}
+
+                                            <p class="card-text">
+                                                <small style="font-size: 16px;">
+                                                    {% if article.publisher.logo_url %}
+                                                    <img src="{{ article.publisher.logo_url }}" alt=""
+                                                         style="width: 25px; height: 25px; vertical-align: middle; margin-right: 10px;">
+                                                    {% endif %}
+                                                    <strong>{{ article.publisher.title }}</strong> | {{ article.publisher.alignment }} |
+                                                    {{ article.published_date|date:"d M Y" }}
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endif %}
+                            {% empty %}
+                            <p class="text-center text-muted">No hay artículos</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (si no lo tienes ya en tu proyecto) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+{% endblock %}

@@ -1,0 +1,26 @@
+# Entornos virtuales
+venv/
+.env/
+
+# Archivos de configuración sensibles
+*.env
+*.secret
+
+# Archivos temporales de Python
+*.pyc
+__pycache__/
+
+# Configuración de IDEs
+.idea/
+.vscode/
+
+# Archivos de migración y bases de datos
+db.sqlite3
+migrations/
+
+# Archivos de caché y de log
+*.log
+
+# Archivos estáticos y de medios
+staticfiles/
+media/
